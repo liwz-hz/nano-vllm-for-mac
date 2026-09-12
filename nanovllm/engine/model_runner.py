@@ -29,7 +29,11 @@ class ModelRunner:
         if self.device == "cuda":
             torch.cuda.set_device(rank)
         default_dtype = torch.get_default_dtype()
-        torch.set_default_dtype(torch.float32 if self.device == "cpu" else hf_config.dtype)
+        if config.dtype == "auto":
+            run_dtype = torch.float32 if self.device == "cpu" else hf_config.dtype
+        else:
+            run_dtype = getattr(torch, config.dtype)
+        torch.set_default_dtype(run_dtype)
         torch.set_default_device(self.device)
         if self.device != "cuda":
             from torch._dynamo import config as _dynamo_config
@@ -143,8 +147,10 @@ class ModelRunner:
                 layer_id += 1
 
     def to_device(self, data, dtype: torch.dtype):
-        t = torch.tensor(data, dtype=dtype, pin_memory=self.device == "cuda")
-        return t.cuda(non_blocking=True) if self.device == "cuda" else t
+        if self.device == "cuda":
+            t = torch.tensor(data, dtype=dtype, pin_memory=True)
+            return t.cuda(non_blocking=True)
+        return torch.tensor(data, dtype=dtype, device=self.device)
 
     def prepare_block_tables(self, seqs: list[Sequence]):
         max_len = max(len(seq.block_table) for seq in seqs)
