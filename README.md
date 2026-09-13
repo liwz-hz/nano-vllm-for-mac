@@ -64,3 +64,9 @@ See `bench.py` for benchmark.
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=GeeeekExplorer/nano-vllm&type=Date)](https://www.star-history.com/#GeeeekExplorer/nano-vllm&Date)
+
+## License & Attribution
+
+This repository is a fork of [nano-vllm](https://github.com/GeeeekExplorer/nano-vllm) by Xingkai Yu, licensed under the MIT License (Copyright (c) 2025 Xingkai Yu).
+
+Modifications and additions in this repository — the CPU and Apple Silicon MPS backends, CPU tensor-parallel bring-up (`example_tp2.py`), and the adaptation/TP engineering guides under `docs/` — are Copyright (c) 2026 liwz, distributed under the same MIT License. See [LICENSE](LICENSE) for the complete notice covering both the original and the modified code.
